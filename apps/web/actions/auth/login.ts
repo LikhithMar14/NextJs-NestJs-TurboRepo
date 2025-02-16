@@ -3,7 +3,6 @@
 import { BACKEND_URL } from "@/lib/constants";
 import { createSession } from "@/lib/session";
 import { FormResponse, LoginFormSchema } from "@/lib/types"
-import { redirect } from "next/navigation";
 import { z } from "zod"
 
 export const signIn = async(values:z.infer<typeof LoginFormSchema>):Promise<FormResponse> => {
@@ -14,6 +13,7 @@ export const signIn = async(values:z.infer<typeof LoginFormSchema>):Promise<Form
             message:validatedFields.error.message
         };
     }
+
     const response = await fetch(
         `${BACKEND_URL}/auth/signin`,
         {
@@ -26,13 +26,16 @@ export const signIn = async(values:z.infer<typeof LoginFormSchema>):Promise<Form
     );
     if(response.ok){
         const result  = await response.json();
+        console.log(result)
+        console.log("Refresh Token from login action ",result.refreshToken)
         await createSession({
             user:{
                 id:result.id,
                 name:result.name,
-            }
+            },
+            accessToken:result.accessToken,
+            refreshToken:result.refreshToken
         })
-        console.log({result})
         return {
             success:true,
             message:"Signin successful"

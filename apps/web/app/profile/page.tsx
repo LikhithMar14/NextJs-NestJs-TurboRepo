@@ -1,13 +1,14 @@
-import { getSession } from "@/lib/session";
-import { redirect } from "next/navigation";
+import getProfile from "@/actions/user/profile";
+
 
 const Profile = async() => {
-    const session = await getSession();
+    const res = await getProfile();
+    
 
     return ( 
         <div className="flex items-center justify-center min-h-screen w-full">
-            <div className="text-6xl text-yellow-400">
-            Profile
+            <div className="text-4xl text-yellow-400">
+                {JSON.stringify(res)}
             </div>
         </div>
      );

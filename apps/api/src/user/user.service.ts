@@ -23,5 +23,15 @@ export class UserService {
         email,
       },
     });
+    
+  }
+
+  async findOne(userId: number) {
+    return await this.prisma.user.findUnique({
+      where: {
+        id:userId,
+      },
+    });
+    
   }
 }
