@@ -8,6 +8,6 @@ import { UserModule } from './user/user.module';
 @Module({
   imports: [AuthModule, UserModule],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}

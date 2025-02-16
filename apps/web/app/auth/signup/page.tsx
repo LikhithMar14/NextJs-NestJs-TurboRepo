@@ -1,12 +1,20 @@
-import { Button } from "@/components/ui/button";
-import React from "react"
+import SignupForm from "@/components/auth/signupForm";
+import { Sign } from "crypto";
+import Link from "next/link";
+import React from "react";
+
 const SignUpPage = () => {
-    return ( 
-        <div className="text-3xl text-red-400">
-            This is a Signup Page
-            <Button>HIT ME</Button>
-        </div>
-     );
-}
- 
+  return (
+    <div>
+      <SignupForm/>
+      <div className="flex justify-between text-sm ">
+        <p>Already have an account?</p>
+        <Link className="underline ml-2" href={"/auth/signin"}>
+          Sign In
+        </Link>
+      </div>
+    </div>
+  );
+};
+
 export default SignUpPage;
