@@ -9,6 +9,6 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [AuthModule, UserModule,ConfigModule.forRoot({isGlobal:true})],
   controllers: [AppController],
-  providers: [AppService,PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}

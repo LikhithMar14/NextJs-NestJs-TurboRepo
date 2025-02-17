@@ -18,8 +18,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SubmitButton } from "../ui/SubmitButton";
+import { useRouter } from "next/navigation";
 
 const SignupForm = () => {
+  const router = useRouter()
   const [isPending, startTransition] = useTransition();
   
   const form = useForm<z.infer<typeof SignupFormSchema>>({
@@ -35,13 +37,16 @@ const SignupForm = () => {
     startTransition(async () => {
       try {
         const response = await signUp(data);
-        if(response.success){
+        if (response.success) {
           toast.success(response.message);
-        }else{
-          console.log("HIT HI HIT HIT HIT HIT HIT")
+          if (response.redirect) {
+            router.push(response.redirect); 
+          }
+        } else {
           toast.error(response.message);
         }
       } catch (error) {
+        console.log("Error: ",error)
         toast.error("Signup failed. Please try again.");
       }finally{
         form.reset()

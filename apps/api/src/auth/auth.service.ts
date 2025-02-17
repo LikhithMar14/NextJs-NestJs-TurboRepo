@@ -5,6 +5,7 @@ import { verify } from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import refreshConfig from './config/refresh.config';
 import { ConfigType } from '@nestjs/config';
+import { log } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -15,9 +16,9 @@ export class AuthService {
     private refreshTokenConfig:ConfigType<typeof refreshConfig>) {}
   async registerUser(createUserDto: CreateUserDto) {
     const user = await this.userService.findByEmail(createUserDto.email);
-    console.log("USER: ",user)
     if(user) { console.log("User already Exists")
        throw new ConflictException("User already Exists")};
+        log("Created User successfully")
     return this.userService.create(createUserDto);
      
   }
@@ -64,5 +65,23 @@ export class AuthService {
     const currentUser = { id: user.id};
     return currentUser
   }
+
+  async validateRefreshToken(userId:number){
+    const user = await this.userService.findOne(userId);
+    if(!user)throw new UnauthorizedException("User not found!");
+    const currentUser = { id: user.id};
+    return currentUser
+  }
+
+  async refreshToken(userId:number){
+    const { accessToken,refreshToken } =  await this.generateToken(userId);
+    return{
+      id:userId,
+      name:name,
+      accessToken,
+      refreshToken
+    }
+  }
+  
   
 }

@@ -1,9 +1,10 @@
-import { Request,Body, Controller, Post, UseGuards, Get } from '@nestjs/common';
+import { Request,Body, Controller, Post, UseGuards, Get, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { log } from 'console';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
+import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 
 
 
@@ -24,5 +25,10 @@ export class AuthController {
   @Get("protected")
   getAll(@Request() req){
     return  {message: `Now you can access this protected Api Route. this is you userId ${req.user.id}` }
+  }
+  @UseGuards(RefreshAuthGuard)
+  @Post("refresh")
+  refresh(@Request() req){
+    
   }
 }

@@ -9,6 +9,7 @@ export type FormResponse = {
       email?: string[];
       password?: string[];
     };
+    redirect?: string
   };
   
 
