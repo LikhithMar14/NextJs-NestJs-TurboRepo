@@ -1,4 +1,5 @@
-import { createSession } from "@/lib/session";
+import { createSession, getSession } from "@/lib/session";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
@@ -21,8 +22,7 @@ export async function GET(req:NextRequest){
         accessToken,
         refreshToken
     });
-    redirect("/");
 
-
+    return redirect("/")
 
 }   
