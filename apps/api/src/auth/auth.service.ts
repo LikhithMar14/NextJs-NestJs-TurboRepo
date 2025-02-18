@@ -1,11 +1,12 @@
 import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
-import { verify } from 'argon2';
+import { hash, verify } from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import refreshConfig from './config/refresh.config';
 import { ConfigType } from '@nestjs/config';
 import { log } from 'console';
+import { AuthJwtPayload } from './types/auth-jwtPayload';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +48,7 @@ export class AuthService {
   }
 
   async generateToken(userId:number){
-    const payload = {sub:userId};
+    const payload:AuthJwtPayload = {sub:userId};
     const [accessToken,refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload),
       this.jwtService.signAsync(payload,this.refreshTokenConfig)
@@ -73,8 +74,11 @@ export class AuthService {
     return currentUser
   }
 
-  async refreshToken(userId:number){
+  async refreshToken(userId:number,name?:string){
     const { accessToken,refreshToken } =  await this.generateToken(userId);
+
+    console.log(accessToken,refreshToken)
+
     return{
       id:userId,
       name:name,
@@ -82,6 +86,5 @@ export class AuthService {
       refreshToken
     }
   }
-  
   
 }

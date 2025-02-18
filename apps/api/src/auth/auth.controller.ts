@@ -26,9 +26,15 @@ export class AuthController {
   getAll(@Request() req){
     return  {message: `Now you can access this protected Api Route. this is you userId ${req.user.id}` }
   }
+  
   @UseGuards(RefreshAuthGuard)
-  @Post("refresh")
-  refresh(@Request() req){
-    
+  @Post('refresh')
+  refreshToken(@Request() req) {
+    console.log(req.user.id)
+    console.log(req.user.name)
+    return this.authService.refreshToken(req.user.id, req.user.name);
   }
+
+
+  
 }
