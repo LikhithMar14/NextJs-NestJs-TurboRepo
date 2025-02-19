@@ -7,6 +7,7 @@ import refreshConfig from './config/refresh.config';
 import { ConfigType } from '@nestjs/config';
 import { log } from 'console';
 import { AuthJwtPayload } from './types/auth-jwtPayload';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -34,14 +35,18 @@ export class AuthService {
     return {
       id:user.id,
       name:user.name,
+      role:user.role
     }
   }
 
-  async login(userId:number,name?:string){
+  async login(userId:number,name:string,role:Role){
     const { accessToken,refreshToken } =  await this.generateToken(userId);
+    const hashedRT = await hash(refreshToken);
+    await this.userService.updateHashedRefreshToken(userId,hashedRT);
     return{
       id:userId,
       name:name,
+      role,
       accessToken,
       refreshToken
     }
@@ -63,21 +68,27 @@ export class AuthService {
   async validateJwtUser(userId:number){
     const user = await this.userService.findOne(userId);
     if(!user)throw new UnauthorizedException("User not found!");
-    const currentUser = { id: user.id};
+    const currentUser = { id: user.id,role:user.role};
+
     return currentUser
   }
 
-  async validateRefreshToken(userId:number){
+  async validateRefreshToken(userId:number,refreshToken:string){
     const user = await this.userService.findOne(userId);
     if(!user)throw new UnauthorizedException("User not found!");
+    const refreshTokenMatched = await verify(user.hashedRefreshToken!,refreshToken)
+
+    if(!refreshTokenMatched)throw new UnauthorizedException("Invalid refresh token");
     const currentUser = { id: user.id};
     return currentUser
   }
 
   async refreshToken(userId:number,name?:string){
     const { accessToken,refreshToken } =  await this.generateToken(userId);
+    const hashedRT = await hash(refreshToken);
+    await this.userService.updateHashedRefreshToken(userId,hashedRT);
 
-    console.log(accessToken,refreshToken)
+
 
     return{
       id:userId,
@@ -91,6 +102,12 @@ export class AuthService {
     if (user) return user;
     return await this.userService.create(googleUser);
   }
+
+  async signOut(userId:number){
+    return this.userService.updateHashedRefreshToken(userId,null)
+  }
+
+
 
   
 }
