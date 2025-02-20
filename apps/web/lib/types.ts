@@ -53,4 +53,5 @@ export const LoginFormSchema = z.object({
 export enum Role {
   ADMIN = "ADMIN",
   USER = "USER",
+  EDITOR = "EDITOR"
 }

@@ -21,7 +21,6 @@ const ThemeImage = (props: Props) => {
 
 export default async function Home() {
   const session = await getSession();
-  console.log("Session: " , session)
   return (
     <div className={styles.page}>
       <main className={styles.main}>

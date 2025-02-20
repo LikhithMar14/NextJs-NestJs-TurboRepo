@@ -3,6 +3,7 @@ import getProfile from "@/actions/user/profile";
 
 const Profile = async() => {
     const res = await getProfile();
+
     
 
     return ( 

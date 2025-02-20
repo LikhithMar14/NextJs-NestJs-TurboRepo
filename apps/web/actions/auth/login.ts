@@ -26,12 +26,13 @@ export const signIn = async(values:z.infer<typeof LoginFormSchema>):Promise<Form
     );
     if(response.ok){
         const result  = await response.json();
-        console.log(result)
-        console.log("Refresh Token from login action ",result.refreshToken)
+
+
         await createSession({
             user:{
                 id:result.id,
                 name:result.name,
+                role:result.role
             },
             accessToken:result.accessToken,
             refreshToken:result.refreshToken

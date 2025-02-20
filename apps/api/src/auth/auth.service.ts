@@ -84,7 +84,9 @@ export class AuthService {
   }
 
   async refreshToken(userId:number,name?:string){
+    log("INSIDE REFRESH TOKEN")
     const { accessToken,refreshToken } =  await this.generateToken(userId);
+    console.log(accessToken)
     const hashedRT = await hash(refreshToken);
     await this.userService.updateHashedRefreshToken(userId,hashedRT);
 
@@ -104,6 +106,7 @@ export class AuthService {
   }
 
   async signOut(userId:number){
+    log("HIT SIGNOUT")
     return this.userService.updateHashedRefreshToken(userId,null)
   }
 

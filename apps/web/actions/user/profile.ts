@@ -12,7 +12,10 @@ const getProfile = async() => {
     //     }
     // });
 
+
+
     const response = await authFetch(`${process.env.BACKEND_URL}/auth/protected`)
+    console.log(response)
     const result = await response.json();
     return result
 }

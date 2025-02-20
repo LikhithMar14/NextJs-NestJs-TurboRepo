@@ -12,13 +12,11 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
-import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
 import { Response } from 'express';
 import { Public } from './decorator/public.decorator';
 import { Roles } from './decorator/roles.decorator';
-import { RolesGuard } from './guards/roles/roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -33,6 +31,7 @@ export class AuthController {
   login(@Request() req) {
     return this.authService.login(req.user.id, req.user.name,req.user.role);
   }
+
   @Roles("ADMIN")
   @Get('protected')
   getAll(@Request() req) {
@@ -70,6 +69,7 @@ export class AuthController {
 
   @Post('/signout')
   async signOut(@Req() req){
+    console.log("Received sign-out request", req.user);
     return this.authService.signOut(req.user.id);
   }
 }

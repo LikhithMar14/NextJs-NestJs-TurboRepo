@@ -4,7 +4,6 @@ import { updateToken } from "@/lib/session";
 export const refreshToken = async (
     oldRefreshToken: string
   ) => {
-    console.log(oldRefreshToken)
     try {
       const response = await fetch(
         "http://localhost:8000/auth/refresh",
@@ -19,7 +18,7 @@ export const refreshToken = async (
         }
       );
 
-  
+      console.log("Response from the refresh: ",response)
       if (!response.ok) {
         throw new Error(
           "Failed to refresh token" + response.statusText
