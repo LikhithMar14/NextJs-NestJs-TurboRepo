@@ -13,5 +13,6 @@ export async function GET(req:NextRequest){
 
     revalidatePath("/","layout");
     revalidatePath("/","page");
+
     return NextResponse.redirect(new URL("/",req.nextUrl))
 }
